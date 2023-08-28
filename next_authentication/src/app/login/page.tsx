@@ -1,7 +1,7 @@
 export default function LoginPage() {
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="text-center">
+      <h1 className="text-white text-2xl">Login</h1>
     </div>
   );
 }

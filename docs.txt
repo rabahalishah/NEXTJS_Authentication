@@ -1,0 +1,45 @@
+React introduced in 2013 and then in 2023 react official documentation recommend not use plain React. They recommend to pick any of the React Framework such as NEXtjs.
+
+What does NEXTjs have that Reactjs doesn't?
+1. NextJs simplifies development process.
+2. On top of that it optimizes your web app.
+
+Key Features of NEXT.js:
+1. Rendering:
+The main difference between react js and next js is the way they handel rendering.
+As we know React render UI on the client side where as Next js can render on both side either Server side or Client side according to your need.
+Now what is Client side rendering (CSR) and what is server side rendering (SSR)?
+CSR or browser rendering happens on client side.
+In CSR when a user request a file from server. The server sends the file and the browser download and render it. Whereas in SSR the server process the request and render the file before sending to the user after completely render on Server side it sends the user a completely render file which results in immediate response.
+
+2. SEO:
+This distinction also highlights the most important part of web dev that is SEO.
+For SEO the brower faces issue while ranking the file as files get render on reaching to the browser. Whereas in SSR the problem of SEO has resolved as pre-render code is directly sending to the client. This enables easy scrolling and indexing which leads to improved SEO.
+
+3. Routing: 
+In react to create pages we have to install an extra package called React Router DOM and then create routes.
+Whereas NEXT.js uses a file-based routing system. Each directory inside the app direcotry will become a route and the folder names would become the routes path. Just WOOWWW!!!
+No need of extra packages or complex configurations
+
+4. Full Stack:
+From NEXT.js version 9 developers created a feature called API route. Enabling the creation of serverless functions to handle API requests.
+Serverless APIs in NEXT.js are simply a way of creating APIs endpoints without having the need of traditional server. 
+It allows us to build and deploy APIs:
+without managing the server infrastructure and worrying about scaling their server as traffic increases.
+
+Lee Robinson (VP of Developer experience at Vercel) claims that using NEXT.js has improve the speed of HMR. Hot module reloading from 1.3 to 131ms which is x10 faster.
+
+5. Automatic Code splitting:
+Code splitting is a technique that breaks down a large bundle of JS code into smaller, more manageable chunks that can be loaded as NEEDED. Which reduces the loading time and optimize the user's experience. In React we have to do this manually. By using lazy function to call the function only when needed and suspense component which is used to show the UI when the component is completely loaded. but in NEXT.js this is entirely automatic.
+
+FRONT-END Dev has become very advance in terms of
+1. Linting
+2. Formatting
+3. Compiling
+4. Bundling
+5. Minifying
+6. Deploying
+
+
+The GOOD thing is that is not a new technology is still react. As NEXT.js is built on the top of React. 
+In summary NEXT.js is an extension of React. Which automates several functions and allowing developer to focus on core code.  

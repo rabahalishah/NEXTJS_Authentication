@@ -1,4 +1,8 @@
+*******************Theory
+
 React introduced in 2013 and then in 2023 react official documentation recommend not use plain React. They recommend to pick any of the React Framework such as NEXtjs.
+NEXT JS 13
+Every thing in next JS 13 has been changed. So old things are not gonna work. Since its a React Framework then we have to follow rules and regulations even in creating folders with their name conventions. 
 
 What does NEXTjs have that Reactjs doesn't?
 1. NextJs simplifies development process.
@@ -43,3 +47,57 @@ FRONT-END Dev has become very advance in terms of
 
 The GOOD thing is that is not a new technology is still react. As NEXT.js is built on the top of React. 
 In summary NEXT.js is an extension of React. Which automates several functions and allowing developer to focus on core code.  
+
+
+************File Structure
+The file structure something goes like this
+
+src folder
+inside src ==> App folder
+inside App folder ==> 
+    1. (For FrontEnd convention goes like) pageName folder ==> page.tsx  (Note: PageName will be the route name for that page so be careful)
+    2. (For BackEnd convention goeas like) API folder ==> user folder ==> RouteName Folder ==> route.ts
+
+Outside App folder but inside the src folder => Models, helpers, components, middlerware, dbConfig etc.
+
+**********Mongo DB setup
+simply go to mongo DB website click on create database and then give your cluster name and then go to network access tab and give your IP or 0.0.0.0/0
+after that go to the Database access tab and add user by giving userID and password and then scroll down and select "Built in role" which should be "read and write to any database"
+now go to database tab click on connect and then copy Database link
+
+inside src ==> dbConfig folder ==> dbConfig.ts 
+
+import mongoose from "mongoose";
+
+export async function connect() {
+  try {
+    mongoose.connect(process.env.MONGO_URI!) //Question mark here is saying to TS dont worry MONGO_URI will be available everytime.
+    const connection = mongoose.connection;
+    connection.on('connected', ()=>{
+        console.log('MongoDB Connected successfully');
+    })
+    connection.on('Error', (err)=>{
+        console.log('MongoDB Connection Error. Please make sure mongoDB is running' + err)
+        process.exit();
+    })
+
+
+  } catch (error) {
+    console.log("Something went wrong!", error);
+  }
+}
+
+
+**********Server Component vs client component
+Every thing which is in the api folder can be termed as for backend part which is called server component and whereas all files outside the api folder (not always) is called client component.
+
+Moreover, Components in the Server Component are guaranteed to be only rendered on the server. Components in the Client Component are primarily rendered on the client, but with Next. js, they can also be pre-rendered on the server and hydrated on the client.
+
+How to make a file/module a client component?
+simply add a decorator on the top of your file:
+"use client";
+now once its a client component you can use all of your window of object, useEffect etc. in short its now a front end dev.
+
+TIP: All functions which either talk to the server or to the database are async functions.
+
+

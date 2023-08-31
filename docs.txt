@@ -135,6 +135,24 @@ export default function UserProfile({ params }: any) {
 
 here {params.id} the id here refers to the name of the folder. since the name of the folder is [id] we are using params.id In case of other name we will go with that.
 
+***************Now talking to the database
+Always remember that we create model folder. In this folder we create our data base model. In this file we create our schemas etc.
+
+*********Theory behind access/verify tokens and ForgotPasswordTokens
+
+There are three main characters in this whole story:
+1. Api/ Backend
+2. USer
+3. Database
+
+Api Generates the access/verify tokens and send its copies to a user and database and then it forget it cause api cannot hold information.
+So, when a user try to login or want to get access to its profile. The user sends that token back to API now API don't know that token so the API will search it in the Database. If it matches the key it will give acccess otherwise not.
+
+Same case is for forgotPasswordToken. When a user forgots its password he clicks on forgot password and then API sends the they ForgotPasswordToken to the user's email and then user open his mail and send back the token to the API and then API again search the user in the Database and then allow him to update his password. 
+
+Concept of verifyTokenExpiry is that we want to expire our token under some time limit after that time limit that token won't make any sense.
+
+
 
 
 

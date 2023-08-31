@@ -107,5 +107,36 @@ now once its a client component you can use all of your window of object, useEff
 
 TIP: All functions which either talk to the server or to the database are async functions.
 
+**********Accessing a spefic page for profile
+In NEXT.js there is a special syntax for accessing the user profile pages
+For example you want this: http//localhost:3000/profile/user1
+
+here how to you gonna get user1?
+
+for that in you profile folder make another folder inside profile folder called [id] or what ever you want but it should be in square brackets
+
+profile folder=>[id] folder=> page.tsx
+
+Example inside page.tsx of [id] folder:
+export default function UserProfile({ params }: any) {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+      <h1>Profile</h1>
+      <hr />
+      <p className="text-4xl">
+        Profile page
+        <span className=" p-2 ml-2 rounded bg-orange-500 text-black">
+          {params.id}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+here {params.id} the id here refers to the name of the folder. since the name of the folder is [id] we are using params.id In case of other name we will go with that.
+
+
+
+
 
 

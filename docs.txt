@@ -152,6 +152,72 @@ Same case is for forgotPasswordToken. When a user forgots its password he clicks
 
 Concept of verifyTokenExpiry is that we want to expire our token under some time limit after that time limit that token won't make any sense.
 
+------------Backend Part
+while making APIs its not exactly same as we do in node js its little bit different. It uses nextRequest and nextResponse functions for requesting and responding
+For example the backend of sigup page will something goes like this:
+
+
+import { connect } from "@/dbConfig/dbConfig";
+import User from "@/models/userModel";
+import { NextRequest, NextResponse } from "next/server";
+import bcryptjs from "bcryptjs";
+
+connect();
+
+export async function POST(request: NextRequest) {
+  try {
+    const reqBody = await request.json();
+    const { username, email, password } = reqBody;
+    console.log(reqBody);
+
+    //checking if  the user already exist
+    const user = await User.findOne({ email });
+
+    if (user) {
+      return NextResponse.json(
+        { error: "User already exists" },
+        { status: 400 }
+      );
+    }
+
+    // hashing the password
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(password, salt);
+
+    // creating new user
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
+    const savedUser = await newUser.save();
+    console.log(savedUser);
+
+    return NextResponse.json(
+      {
+        message: "User Created Successfully",
+        success: true,
+        savedUser
+      },
+      
+    );
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+
+// This is how you make post request and handel that request in the backend.
+
+
+*******Important NOTE:
+1. All console.log we made in our frontend part will be shown in the browser console and all the console.log we have made in our API or backend section will be displayed in the VS code terminal.
+2. Just to clear a confusion. People think while making a signup page we are making post request on both sides either its a front end or backend part. 
+So, Always remember that in frontend we are getting inputs from the user and by clicking on signup or register button we send that enter data to the backend using post request to the backend API 
+which is usually a URL.  Now on the backend side again making post request to get "req.body" which is data coming from the front end we get the data from front end now here what will we do with this data? So now you can store this data into the database or authenticate it whatever you want.
+
+3. Once the user has found and the password is correct we generates a JWT token stores it into the cookies so that user cannot manipulate it. It can contains a lot of payload which we can access later on.
 
 
 

@@ -3,13 +3,13 @@ import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 
-connect();
+connect(); // never forget to use this connect function
 
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     const { username, email, password } = reqBody;
-    console.log(reqBody);
+    console.log("reqeust body from signup api route", reqBody);
 
     //checking if  the user already exist
     const user = await User.findOne({ email });
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
 
-    // creating new user
+    // creating new user or storing the data into the database
     const newUser = new User({
       username,
       email,
@@ -33,16 +33,13 @@ export async function POST(request: NextRequest) {
     });
 
     const savedUser = await newUser.save();
-    console.log(savedUser);
+    console.log("saved user from route file", savedUser);
 
-    return NextResponse.json(
-      {
-        message: "User Created Successfully",
-        success: true,
-        savedUser
-      },
-      
-    );
+    return NextResponse.json({
+      message: "User Created Successfully",
+      success: true,
+      savedUser,
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

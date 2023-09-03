@@ -218,6 +218,78 @@ So, Always remember that in frontend we are getting inputs from the user and by 
 which is usually a URL.  Now on the backend side again making post request to get "req.body" which is data coming from the front end we get the data from front end now here what will we do with this data? So now you can store this data into the database or authenticate it whatever you want.
 
 3. Once the user has found and the password is correct we generates a JWT token stores it into the cookies so that user cannot manipulate it. It can contains a lot of payload which we can access later on.
+4. This is how a get request in nextjs looks like. Actually making request in nextJS backend is slightly different as we use NextRequest and NextResponse instead of plain req, res.
+Below is an example of logging out logic
+
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  try {
+    const response = NextResponse.json(
+      {
+        message: "Logout Successful",
+        success: true,
+      }
+      // since the reponse is NextResponse type this can interact with the cookies
+      // so below setting the token as empty
+    );
+    response.cookies.set("token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+    });
+    return response;
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+********Middleware 
+Middle are the function which allows us to run a code before the request is completed.  As their name suggest they run intermediately before the request is completed. Then on the base of incoming request, you can modify the response.
+
+The convention is:
+
+src=> middleware.ts
+
+*********Protecting routes
+
+Since we dont want the users to access the profile if the user is not authenticated. And we also dont the authentciated user to access login and signup page. He should have to logout first before accessing the login and signup page.
+
+This is how a middleware works in Next JS
+
+import { redirect } from "next/dist/server/api-utils";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+export function middleware(request: NextRequest) {
+  // the below will monitor and get the path which the user is entering
+  const path = request.nextUrl.pathname;
+  const isPublicPath = path === "/login" || path === "/signup";
+
+  // here we are grabbing the token and we are not sure whether the token is there or not. In case of not there we are providing an empty string
+  const token = request.cookies.get("token")?.value || "";
+
+  if (isPublicPath && token) {
+    return NextResponse.redirect(new URL("/", request.nextUrl));
+  }
+  if (!isPublicPath && !token) {
+    return NextResponse.redirect(new URL("/login", request.nextUrl));
+    
+  }
+}
+
+// See "Matching Paths" below to learn more
+export const config = {
+  matcher: [   '/',
+  '/profile',
+  '/login',
+  '/signup',],
+};
+
+// very very simple.....Simly gives the path in the matcher on which you wanna work or apply your logic. Get your path using using pathname method and apply your logic that it.
+
+
+
+
 
 
 

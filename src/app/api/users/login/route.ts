@@ -1,57 +1,53 @@
-import { connect } from "@/dbConfig/dbConfig";
+import {connect} from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-connect(); // never forget to use this connect function
+connect()
 
-export async function POST(request: NextRequest) {
-  try {
-    const reqBody = await request.json();
-    const { email, password } = reqBody;
-    console.log("Reqeust body from Login api route:", reqBody);
+export async function POST(request: NextRequest){
+    try {
 
-    // checking if the user exists or not
-    const user = await User.findOne({ email }); //getting user from data base
+        const reqBody = await request.json()
+        const {email, password} = reqBody;
+        console.log(reqBody);
 
-    if (!user) {
-      return NextResponse.json(
-        { error: "User doesn't exist" },
-        { status: 400 }
-      );
+        //check if user exists
+        const user = await User.findOne({email})
+        if(!user){
+            return NextResponse.json({error: "User does not exist"}, {status: 400})
+        }
+        console.log("user exists");
+        
+        
+        //check if password is correct
+        const validPassword = await bcryptjs.compare(password, user.password)
+        if(!validPassword){
+            return NextResponse.json({error: "Invalid password"}, {status: 400})
+        }
+        console.log(user);
+        
+        //create token data
+        const tokenData = {
+            id: user._id,
+            username: user.username,
+            email: user.email
+        }
+        //create token
+        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: "1d"})
+
+        const response = NextResponse.json({
+            message: "Login successful",
+            success: true,
+        })
+        response.cookies.set("token", token, {
+            httpOnly: true, 
+            
+        })
+        return response;
+
+    } catch (error: any) {
+        return NextResponse.json({error: error.message}, {status: 500})
     }
-
-    // verifying the pasword:
-    const validPassword = await bcryptjs.compare(password, user.password);
-    // her we are comparing our password which is coming from reqBody and the password which is coming from database.
-
-    // generating JWT
-    const tokenData = {
-      id: user._id,
-      username: user.username,
-      email: user.email,
-    };
-    // _id is automatically created by mongodb on creating a new user
-    // its your choice how much data you want to put in tokenData
-    // creating  token
-    const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
-      expiresIn: "1d",
-    });
-
-    const response = NextResponse.json({
-      message: "login Successfully",
-      success: true,
-    });
-
-    // storing token in httponly cookies
-    response.cookies.set("token", token, {
-      httpOnly: true,
-    });
-
-    // since we have done all now we can return the response for this end point
-    return response;
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
 }
